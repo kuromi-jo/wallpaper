@@ -1,0 +1,484 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  -webkit-tap-highlight-color: transparent; 
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #0f0f11;
+  padding: 20px; 
+  color: white;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  gap: 24px; 
+  width: 100%;
+  max-width: 500px;
+}
+
+.controls-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.sidebar-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; 
+  gap: 12px; 
+  width: 100%;
+}
+
+.btn-action {
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  flex: 1; 
+  min-width: 140px;
+}
+
+.btn-action svg {
+  fill: white;
+}
+
+.btn-action:active {
+  transform: scale(0.96);
+}
+
+.btn-wallpaper {
+  background: #ff74d7; 
+  box-shadow: 0 4px 15px rgba(94, 92, 230, 0.35);
+  width: 100%;
+}
+
+.btn-add-notif {
+  background: #e277ff;
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.35);
+}
+
+.btn-delete-all {
+  background: #ff6c6c;
+  box-shadow: 0 4px 15px rgba(255, 59, 48, 0.35);
+}
+
+.iphone-frame {
+  width: 100%;  
+  max-width: 320px; 
+  aspect-ratio: 9 / 19.5; 
+  min-height: 600px; 
+  position: relative;
+  border-radius: 36px;
+  overflow: hidden; 
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 10% 40%, #ff2a4a 0%, transparent 60%),
+              radial-gradient(circle at 90% 90%, #20b2aa 0%, transparent 50%),
+              radial-gradient(circle at 50% 100%, #007aff 0%, transparent 60%),
+              radial-gradient(circle at 80% 10%, #1c0042 0%, #300020 100%);
+  background-color: #0b1021;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  padding: 15px 12px;
+}
+
+.status-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  align-items: center;
+  padding-right: 10px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.status-bar svg { fill: white; height: 11px; }
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  margin-top: 15px;
+  flex-shrink: 0;
+}
+
+.lock-icon, .time, .date {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.lock-icon:active, .time:active, .date:active { opacity: 0.5; }
+
+.lock-icon {
+  margin-bottom: 8px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lock-icon svg { width: 22px; height: 22px; fill: white; filter: drop-shadow(0px 1px 3px rgba(0,0,0,0.5)); }
+
+.time {
+  font-size: clamp(60px, 18vw, 75px); 
+  font-weight: 200; 
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 4px;
+  text-shadow: 0px 2px 8px rgba(0,0,0,0.3);
+}
+
+.date {
+  font-size: 17px;
+  font-weight: 500;
+  text-shadow: 0px 1px 5px rgba(0,0,0,0.4);
+}
+
+/* Notifications Area */
+.notifications-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  width: 100%;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  padding: 0 4px;
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+}
+
+.notifications-area::-webkit-scrollbar { display: none; }
+
+.notification {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 10px;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9) translateY(15px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.notification:active {
+  opacity: 0.6;
+  transform: scale(0.97);
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.notification-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notification-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+.notification-time {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.notification-content {
+  font-size: 14px;
+  line-height: 1.35;
+  opacity: 0.95;
+}
+
+.notification-subtitle {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+
+.notification-footer {
+  font-size: 13px;
+  opacity: 0.6;
+  margin-top: 6px;
+}
+
+.imessage-icon-placeholder {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background-color: #34c759;
+  background-image: url('imessage.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  font-weight: bold;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Bottom Controls */
+.bottom-controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px 5px 15px;
+  flex-shrink: 0;
+}
+
+.control-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.control-btn svg { width: 20px; height: 20px; fill: white; }
+
+.btn-download {
+  background: #99b5fc;
+  color: white;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(52, 199, 89, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-download:active { transform: scale(0.96); }
+.btn-download svg { fill: white; }
+
+/* --- Responsive Modals --- */
+.modal-overlay {
+  position: fixed; 
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: rgba(30, 30, 32, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 360px;
+  border-radius: 24px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  transform: scale(0.95) translateY(10px);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  max-height: 90vh;
+  overflow-y: auto;
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+}
+
+.modal-content::-webkit-scrollbar { display: none; }
+
+#wallpaperModalOverlay .modal-content {
+  max-width: 450px;
+}
+
+.modal-overlay.active .modal-content {
+  transform: scale(1) translateY(0);
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: #a0a0a5;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="time"],
+.modal-content input[type="date"] {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 16px; 
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  color-scheme: dark; 
+}
+
+.modal-content input:focus {
+  border-color: #007aff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.modal-content input:last-of-type { margin-bottom: 24px; }
+
+.file-input-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.file-input-wrapper input[type="file"] {
+  width: 100%;
+  color: white;
+  font-size: 14px;
+}
+
+.cropper-wrapper {
+  width: 100%;
+  max-height: 350px;
+  margin-bottom: 20px;
+  display: none;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.cropper-wrapper img {
+  max-width: 100%;
+  display: block;
+}
+
+.preset-scroller {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding-bottom: 4px;
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+.preset-scroller::-webkit-scrollbar { display: none; }
+
+.preset-item {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background-color: #333;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.preset-item.selected {
+  border-color: #007aff;
+  transform: scale(1.08);
+}
+
+.preset-imessage { background-color: #34c759; background-image: url('imessage.png'); }
+.preset-twitter { background-color: #1da1f2; background-image: url('twitter.png'); }
+.preset-instagram { background-color: #e1306c; background-image: url('instagram.png'); }
+.preset-facebook { background-color: #1877f2; background-image: url('facebook.png'); }
+.preset-call { background-color: #34c759; background-image: url('call.png'); }
+
+.modal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.modal-buttons.column {
+  flex-direction: column;
+}
+
+.modal-buttons button {
+  flex: 1;
+  min-width: 80px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.modal-buttons button:active { transform: scale(0.95); }
+
+.btn-delete { background: rgba(255, 59, 48, 0.2); color: #ff453a; }
+.btn-cancel { background: rgba(255, 255, 255, 0.1); color: white; }
+.btn-save { background: #007aff; color: white; }
+.btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; }
