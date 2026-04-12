@@ -13,6 +13,7 @@ lockToggle.addEventListener('click', () => {
     iconLocked.style.display = 'none';
     iconUnlocked.style.display = 'block';
   }
+  saveState();
 });
 
 // --- MODAL UTILITIES ---
@@ -50,6 +51,7 @@ saveTimeBtn.addEventListener('click', () => {
     timeDisplay.innerText = `${hours}:${minutes}`;
   }
   closeModal('timeModalOverlay');
+  saveState();
 });
 
 // --- DATE MODAL LOGIC ---
@@ -72,6 +74,7 @@ saveDateBtn.addEventListener('click', () => {
     dateDisplay.innerText = selectedDate.toLocaleDateString('en-US', options);
   }
   closeModal('dateModalOverlay');
+  saveState();
 });
 
 // --- WALLPAPER CHANGE LOGIC (CROPPER.JS) ---
@@ -123,12 +126,14 @@ applyWallpaperBtn.addEventListener('click', () => {
     phoneScreen.style.backgroundImage = `url('${croppedImageURL}')`;
     closeWallpaperModal();
   }
+  saveState();
 });
 
 // --- RESTORE DEFAULT WALLPAPER ---
 resetWallpaperBtn.addEventListener('click', () => {
   phoneScreen.style.backgroundImage = '';
   closeWallpaperModal();
+  saveState();
 });
 
 function closeWallpaperModal() {
@@ -219,6 +224,7 @@ saveNotifBtn.addEventListener('click', () => {
   }
 
   closeModal('notificationModalOverlay');
+  saveState();
 });
 
 deleteNotifBtn.addEventListener('click', () => {
@@ -227,6 +233,7 @@ deleteNotifBtn.addEventListener('click', () => {
     currentActiveNotification = null; 
   }
   closeModal('notificationModalOverlay');
+  saveState();
 });
 
 // --- ADD / DELETE ALL NOTIFICATIONS LOGIC ---
@@ -253,10 +260,12 @@ addNotificationBtn.addEventListener('click', () => {
 
   notificationsList.insertAdjacentHTML('beforeend', newNotificationHTML);
   notificationsList.scrollTop = notificationsList.scrollHeight;
+  saveState();
 });
 
 deleteAllBtn.addEventListener('click', () => {
   notificationsList.innerHTML = ''; 
+  saveState();
 });
 
 // --- DOWNLOAD HD SCREENSHOT LOGIC ---
@@ -276,3 +285,50 @@ downloadScreenshotBtn.addEventListener('click', () => {
     link.click();
   });
 });
+
+// --- LOCAL STORAGE (SAVE/LOAD LOGIC) ---
+
+function saveState() {
+  const appState = {
+    isLocked: isLocked,
+    timeText: timeDisplay.innerText,
+    dateText: dateDisplay.innerText,
+    wallpaperURL: phoneScreen.style.backgroundImage,
+    notificationsHTML: notificationsList.innerHTML
+  };
+  
+  try {
+    // Save everything as a stringified JSON object
+    localStorage.setItem('lockScreenState', JSON.stringify(appState));
+  } catch (e) {
+    console.error("Failed to save state. The cropped wallpaper might be too large for local storage.", e);
+  }
+}
+
+function loadState() {
+  const savedData = localStorage.getItem('lockScreenState');
+  
+  if (savedData) {
+    const appState = JSON.parse(savedData);
+
+    // 1. Restore Lock Status
+    isLocked = appState.isLocked;
+    if (isLocked) {
+      iconLocked.style.display = 'block';
+      iconUnlocked.style.display = 'none';
+    } else {
+      iconLocked.style.display = 'none';
+      iconUnlocked.style.display = 'block';
+    }
+
+    // RESTORATION
+    if (appState.timeText) timeDisplay.innerText = appState.timeText;
+    if (appState.dateText) dateDisplay.innerText = appState.dateText;
+
+    if (appState.wallpaperURL) phoneScreen.style.backgroundImage = appState.wallpaperURL;
+    
+    if (appState.notificationsHTML) notificationsList.innerHTML = appState.notificationsHTML;
+  }
+}
+
+window.addEventListener('DOMContentLoaded', loadState);
